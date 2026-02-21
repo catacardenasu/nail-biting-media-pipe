@@ -1,20 +1,49 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Nail Biting Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Niblet Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <button id="enableNotifications">Enable Desktop Alerts</button>
-    <div class="container">
-    <video class="input_video" style="display:none"></video>
-    <canvas class="output_canvas"></canvas>
-    <div id="status">Status: Monitoring...</div>
-  </div>
+  <main class="app-shell">
+    <section class="start-card" id="startCard" aria-labelledby="appTitle">
+      <div class="card-sticker" aria-hidden="true">✿</div>
+      <div class="sparkle sparkle-a" aria-hidden="true"></div>
+      <div class="sparkle sparkle-b" aria-hidden="true"></div>
+      <p class="eyebrow">Hello there</p>
+      <h1 id="appTitle">Niblet Monitor</h1>
+      <p class="subtitle">Watch your hands while you work!</p>
+      <button class="btn btn-primary" id="startMonitoringBtn" type="button">Start Monitoring</button>
+    </section>
+
+    <section class="monitor-panel" id="monitorPanel" aria-live="polite" hidden>
+      <header class="panel-head">
+        <h2>Live Monitoring</h2>
+        <p id="status" class="status status-normal">Monitoring</p>
+      </header>
+
+      <div class="webcam-frame">
+        <video class="input_video" playsinline></video>
+        <canvas class="output_canvas"></canvas>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-toggle" id="enableNotifications" type="button" aria-pressed="false">
+          Enable Notifications
+        </button>
+        <button class="btn btn-secondary" id="stopMonitoringBtn" type="button">Stop Monitoring</button>
+      </div>
+    </section>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
