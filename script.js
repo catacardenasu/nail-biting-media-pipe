@@ -20,7 +20,7 @@ let goodTimerInterval = null;
 let goalSeconds = 600;
 let lastBunnyState = 'idle';
 let sessionStartTime = null;
-let biteCount = 0;
+let biteCount;
 let bestStreak = 0;
 let currentStreakStart = null;
 const GEMINI_API_KEY = 'AIzaSyCXWzULTaMRj94BwqbFoU7O2P0sp6dHyOw';
@@ -203,12 +203,9 @@ function onResults(results) {
   if (handNearMouth) {
     if (!biteStartTime) {
       biteStartTime = Date.now();
-    } else if (Date.now() - biteStartTime >= BITE_THRESHOLD_MS) {
+    } else if (Date.now() - biteStartTime >= BITE_THRESHOLD_MS && !biteAlertActive) {
       biteAlertActive = true;
       biteCount++;
-      const streakDuration = Date.now() - (currentStreakStart || Date.now());
-      if (streakDuration > bestStreak) bestStreak = streakDuration;
-      currentStreakStart = null;
       const angryOrSad = Math.random() > 0.5 ? 'angry' : 'sad';
       setBunny(angryOrSad);
       setStatus("Stop biting!", "alert");
@@ -218,7 +215,6 @@ function onResults(results) {
     }
   } else {
     biteStartTime = null;
-    if (!currentStreakStart) currentStreakStart = Date.now();
     if (biteAlertActive) {
       startGoodTimer();
     }
