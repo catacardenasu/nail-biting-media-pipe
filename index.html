@@ -15,9 +15,9 @@
 </head>
 <body>
   <main class="app-shell">
-    <section class="start-card" id="startCard" aria-labelledby="appTitle" style="max-width:900px; width:95%;">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
-        <div style="flex:1; min-width:200px;">
+    <section class="start-card" id="startCard" aria-labelledby="appTitle" style="max-width:960px; width:95%; margin: 0 auto;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:40px; flex-wrap:wrap; padding: 20px 10px;">
+        <div style="flex:1; min-width:220px; max-width:480px; text-align:center;">
           <p class="eyebrow">Hello there 🌸</p>
           <h1 id="appTitle">Niblet</h1>
           <p class="subtitle">Your nail biting buddy. Watch your hands while you work!</p>
@@ -26,7 +26,7 @@
             <input id="goalInput" type="number" min="1" max="120" value="10" style="margin-top:8px; display:block; width:100%; padding:10px 14px; border-radius:14px; border:1.5px solid #ffc9d8; font-size:1rem; font-family:inherit; color:#5b4152; background:#fff8f6; outline:none;">
           </div>
           <button class="btn btn-primary" id="startMonitoringBtn" type="button">Start Monitoring</button>
-          <p style="margin-top:14px; font-size:0.82rem; color:#886879;">📌 Tip: Click <strong>"Pin to Screen"</strong> after starting so Niblet stays visible while you work in other tabs!</p>
+          <p style="margin-top:14px; font-size:0.92rem; color:#886879;">📌 Tip: Click <strong style="font-size:0.92rem;">"Pin to Screen"</strong> after starting so Niblet stays visible while you work in other tabs!</p>
         </div>
         <div style="flex:0 0 auto; text-align:center;">
           <img id="homeBunny" src="gifs/Sleepy.gif" alt="Niblet bunny" style="width:180px; filter:drop-shadow(0 8px 18px rgba(214,156,175,0.3));">
@@ -62,6 +62,71 @@
         <button class="btn btn-secondary" id="stopMonitoringBtn" type="button">Stop Monitoring</button>
       </div>
     </section>
+    <div id="summaryModal" style="display:none; position:fixed; inset:0; background:rgba(91,65,82,0.18); backdrop-filter:blur(4px); z-index:1000; place-items:center; justify-content:center;">
+      <div style="background:#fffdfb; border-radius:24px; padding:40px 36px; max-width:420px; width:90%; text-align:center; box-shadow:0 20px 48px rgba(214,156,175,0.3); border:1px solid #ffe9f0;">
+        <img id="summaryBunny" src="gifs/Happy.gif" style="width:100px; margin-bottom:12px;">
+        <h2 style="font-family:'CuteStitch',sans-serif; color:#5b4152; margin:0 0 8px;">Session Complete!</h2>
+        <p id="summaryMessage" style="color:#886879; margin:0 0 20px; font-size:1rem;"></p>
+        <div style="background:#fff0f5; border-radius:16px; padding:16px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-around; gap:12px; flex-wrap:wrap;">
+            <div>
+              <p style="margin:0; font-size:1.6rem; font-weight:700; color:#ef7b9f;" id="statDuration">0:00</p>
+              <p style="margin:0; font-size:0.78rem; color:#886879;">Total Time</p>
+            </div>
+            <div>
+              <p style="margin:0; font-size:1.6rem; font-weight:700; color:#ef7b9f;" id="statBestStreak">0:00</p>
+              <p style="margin:0; font-size:0.78rem; color:#886879;">Best Streak</p>
+            </div>
+            <div>
+              <p style="margin:0; font-size:1.6rem; font-weight:700; color:#ef7b9f;" id="statBites">0</p>
+              <p style="margin:0; font-size:0.78rem; color:#886879;">Bite Events</p>
+            </div>
+          </div>
+        </div>
+        <div id="geminiSection" style="margin-bottom:16px;">
+          <div id="geminiPepTalk" style="background:#fff0f5; border-radius:14px; padding:14px 16px; color:#5b4152; font-size:0.9rem; line-height:1.5; text-align:left; min-height:60px; display:flex; align-items:center; justify-content:center;">
+            <span style="color:#bb8899; font-style:italic;">Getting your personalized pep talk... 🐰</span>
+          </div>
+        </div>
+        <button onclick="document.getElementById('summaryModal').style.display='none'" class="btn btn-primary" style="width:100%;">Done</button>
+      </div>
+    </div>
+    <button id="tipsBtn" style="position:fixed; bottom:24px; right:24px; width:48px; height:48px; border-radius:50%; background:linear-gradient(180deg,#ff99bc,#ea759a); border:none; color:white; font-size:1.3rem; cursor:pointer; box-shadow:0 8px 20px rgba(239,123,159,0.35); z-index:999; font-family:'CuteStitch',sans-serif;" title="Tips to stop nail biting">?</button>
+
+    <div id="tipsModal" style="display:none; position:fixed; inset:0; background:rgba(91,65,82,0.18); backdrop-filter:blur(4px); z-index:1000; place-items:center; justify-content:center;">
+      <div style="background:#fffdfb; border-radius:24px; padding:36px 32px; max-width:400px; width:90%; text-align:center; box-shadow:0 20px 48px rgba(214,156,175,0.3); border:1px solid #ffe9f0; max-height:85vh; overflow-y:auto;">
+          <img src="gifs/Idle.gif" style="width:80px; margin-bottom:8px;">
+          <h2 style="font-family:'CuteStitch',sans-serif; color:#5b4152; margin:0 0 6px;">Tips to Stop Biting 🌸</h2>
+          <p style="color:#886879; font-size:0.85rem; margin:0 0 18px;">Small habits that make a big difference!</p>
+          <div style="text-align:left; display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+            <div style="background:#fff0f5; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.4rem;">🪀</span>
+              <span style="color:#5b4152; font-size:0.9rem;">Keep a fidget toy close by so your hands have something to do</span>
+            </div>
+            <div style="background:#fff0f5; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.4rem;">💅</span>
+              <span style="color:#5b4152; font-size:0.9rem;">Try painting your nails! You'll think twice before biting them</span>
+            </div>
+            <div style="background:#fff0f5; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.4rem;">🫧</span>
+              <span style="color:#5b4152; font-size:0.9rem;">Bitter-tasting nail polish works wonders for a lot of people</span>
+            </div>
+            <div style="background:#fff0f5; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.4rem;">🧘</span>
+              <span style="color:#5b4152; font-size:0.9rem;">Pay attention to when it happens. Stress? Boredom? Deep focus?</span>
+            </div>
+            <div style="background:#fff0f5; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.4rem;">🌟</span>
+              <span style="color:#5b4152; font-size:0.9rem;">Every clean session is worth celebrating, seriously!</span>
+            </div>
+            <div style="background:#fff0f5; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.4rem;">🫶</span>
+              <span style="color:#5b4152; font-size:0.9rem;">Breaking habits takes time, so be kind to yourself along the way</span>
+            </div>
+          </div>
+          <button onclick="document.getElementById('tipsModal').style.display='none'" class="btn btn-primary" style="width:100%;">Got it!</button>
+      </div>
+    </div>
   </main>
 
   <script src="script.js"></script>

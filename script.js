@@ -19,6 +19,11 @@ let goodSeconds = 0;
 let goodTimerInterval = null;
 let goalSeconds = 600;
 let lastBunnyState = 'idle';
+let sessionStartTime = null;
+let biteCount = 0;
+let bestStreak = 0;
+let currentStreakStart = null;
+const GEMINI_API_KEY = 'AIzaSyCXWzULTaMRj94BwqbFoU7O2P0sp6dHyOw';
 
 
 
@@ -200,6 +205,10 @@ function onResults(results) {
       biteStartTime = Date.now();
     } else if (Date.now() - biteStartTime >= BITE_THRESHOLD_MS) {
       biteAlertActive = true;
+      biteCount++;
+      const streakDuration = Date.now() - (currentStreakStart || Date.now());
+      if (streakDuration > bestStreak) bestStreak = streakDuration;
+      currentStreakStart = null;
       const angryOrSad = Math.random() > 0.5 ? 'angry' : 'sad';
       setBunny(angryOrSad);
       setStatus("Stop biting!", "alert");
@@ -209,6 +218,7 @@ function onResults(results) {
     }
   } else {
     biteStartTime = null;
+    if (!currentStreakStart) currentStreakStart = Date.now();
     if (biteAlertActive) {
       startGoodTimer();
     }
@@ -254,6 +264,10 @@ async function startMonitoring() {
     resetGoodTimer();
     startGoodTimer();
     setBunny('idle');
+    sessionStartTime = Date.now();
+    biteCount = 0;
+    bestStreak = 0;
+    currentStreakStart = Date.now();
     setStatus("Monitoring", "normal");
   } catch (error) {
     setStatus("Could not access webcam. Please allow camera permission.", "alert");
@@ -291,6 +305,7 @@ function stopMonitoring() {
   startCard.hidden = false;
   stopGoodTimer();
   resetGoodTimer();
+  showSessionSummary();
 }
 
 async function toggleNotifications() {
@@ -321,6 +336,82 @@ async function toggleNotifications() {
     : "Enable Notifications";
 }
 
+function showSessionSummary() {
+  if (!sessionStartTime) return;
+
+  const totalMs = Date.now() - sessionStartTime;
+  const totalSec = Math.floor(totalMs / 1000);
+
+  if (currentStreakStart) {
+    const finalStreak = Date.now() - currentStreakStart;
+    if (finalStreak > bestStreak) bestStreak = finalStreak;
+  }
+
+  const bestStreakSec = Math.floor(bestStreak / 1000);
+
+  document.getElementById('statDuration').textContent = formatTime(totalSec);
+  document.getElementById('statBestStreak').textContent = formatTime(bestStreakSec);
+  document.getElementById('statBites').textContent = biteCount;
+
+  let message = '';
+  let bunnyState = 'happy';
+  if (biteCount === 0) {
+    message = 'Perfect session! Not a single bite! 🌸';
+    bunnyState = 'happy';
+  } else if (biteCount <= 3) {
+    message = 'Great job! You\'re doing really well! 🐰';
+    bunnyState = 'happy';
+  } else if (biteCount <= 8) {
+    message = 'Good effort! Keep practicing! 💪';
+    bunnyState = 'idle';
+  } else {
+    message = 'Don\'t give up — every session gets better! 🌷';
+    bunnyState = 'sad';
+  }
+
+  document.getElementById('summaryMessage').textContent = message;
+  document.getElementById('summaryBunny').src = 'gifs/' + bunnyState.charAt(0).toUpperCase() + bunnyState.slice(1) + '.gif';
+
+  const modal = document.getElementById('summaryModal');
+  modal.style.display = 'grid';
+  const pepTalkEl = document.getElementById('geminiPepTalk');
+  if (pepTalkEl) {
+    pepTalkEl.innerHTML = '<span style="color:#bb8899; font-style:italic;">Getting your personalized pep talk... 🐰</span>';
+    getGeminiPepTalk(biteCount, bestStreakSec, totalSec).then(text => {
+      pepTalkEl.textContent = text;
+    });
+  }
+}
+
+async function getGeminiPepTalk(biteCount, bestStreakSec, totalSec) {
+  const prompt = `You are Niblet, an encouraging and cute AI buddy helping someone stop biting their nails. 
+  They just finished a monitoring session with these stats:
+  - Total session time: ${formatTime(totalSec)}
+  - Number of bite events detected: ${biteCount}
+  - Best streak without biting: ${formatTime(bestStreakSec)}
+  
+  Write a short, warm, encouraging 2-3 sentence pep talk personalized to their performance. 
+  Be genuinely supportive, mention their actual stats, and end with a motivating tip. 
+  Use 1-2 cute emojis. Keep it under 60 words.`;
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    );
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "You're doing amazing — keep going! 🐰";
+  } catch (e) {
+    return "Every session is progress — you should be proud! 🌸";
+  }
+}
+
 startBtn.addEventListener("click", startMonitoring);
 stopBtn.addEventListener("click", stopMonitoring);
 notificationBtn.addEventListener("click", toggleNotifications);
@@ -348,4 +439,7 @@ document.getElementById('enableSound').addEventListener('click', () => {
   btn.classList.toggle('is-on', soundEnabled);
   btn.setAttribute('aria-pressed', String(soundEnabled));
   btn.textContent = soundEnabled ? 'Sound Alert On' : 'Enable Sound Alert';
+});
+document.getElementById('tipsBtn').addEventListener('click', () => {
+  document.getElementById('tipsModal').style.display = 'grid';
 });
