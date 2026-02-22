@@ -15,17 +15,18 @@
 </head>
 <body>
   <main class="app-shell">
-    <section class="start-card" id="startCard" aria-labelledby="appTitle">
+    <section class="start-card" id="startCard" aria-labelledby="appTitle" style="max-width:900px; width:95%;">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
         <div style="flex:1; min-width:200px;">
           <p class="eyebrow">Hello there 🌸</p>
           <h1 id="appTitle">Niblet</h1>
-          <p class="subtitle">Your nail biting buddy. Stay mindful while you work!</p>
+          <p class="subtitle">Your nail biting buddy. Watch your hands while you work!</p>
           <div style="margin-bottom: 20px;">
             <label for="goalInput" style="font-weight:700; color:#886879; font-size:0.95rem;">Set a goal (minutes without biting):</label>
             <input id="goalInput" type="number" min="1" max="120" value="10" style="margin-top:8px; display:block; width:100%; padding:10px 14px; border-radius:14px; border:1.5px solid #ffc9d8; font-size:1rem; font-family:inherit; color:#5b4152; background:#fff8f6; outline:none;">
           </div>
           <button class="btn btn-primary" id="startMonitoringBtn" type="button">Start Monitoring</button>
+          <p style="margin-top:14px; font-size:0.82rem; color:#886879;">📌 Tip: Click <strong>"Pin to Screen"</strong> after starting so Niblet stays visible while you work in other tabs!</p>
         </div>
         <div style="flex:0 0 auto; text-align:center;">
           <img id="homeBunny" src="gifs/Sleepy.gif" alt="Niblet bunny" style="width:180px; filter:drop-shadow(0 8px 18px rgba(214,156,175,0.3));">

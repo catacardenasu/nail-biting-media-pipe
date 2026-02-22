@@ -35,7 +35,7 @@ body {
 }
 
 .app-shell {
-  width: min(760px, 100%);
+  width: min(960px, 96%);
 }
 
 .start-card,
@@ -49,6 +49,8 @@ body {
 }
 
 .start-card {
+  min-height: 420px;
+  padding: 48px 44px;
   text-align: center;
   overflow: hidden;
   outline: 1px dashed #ffc8d8;

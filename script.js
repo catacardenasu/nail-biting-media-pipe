@@ -140,7 +140,6 @@ function sendNotification() {
     try {
       new Notification('Niblet', {
         body: 'Stop biting your nails! 🐰',
-        icon: Math.random() > 0.5 ? 'gifs/Angry.gif' : 'gifs/Sad.gif',
         tag: 'niblet-alert',
         renotify: true,
         requireInteraction: true,
